@@ -4,7 +4,7 @@ I am using GAS to extract lead time information from JIRA and create a dashboard
 # Installation
 
 * You can copy the spreadsheet from https://docs.google.com/spreadsheets/d/1_VWXIqWjcNnTi4Erh3jWeu7BUadcOLA5XF5gh-yUChY/edit?usp=sharing
-* or copy main.gs code to your app script.
+* or copy my code to your app script.
 
 # Settings
 
