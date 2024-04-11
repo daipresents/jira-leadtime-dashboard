@@ -1,4 +1,6 @@
 # jira-leadtime-dashboard-gas
+![](dashboard.png)
+
 I am using GAS to extract lead time information from JIRA and create a dashboard.
 
 # Installation
