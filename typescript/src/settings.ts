@@ -1,54 +1,70 @@
-import 'dotenv/config'
-import { Buffer } from 'buffer';
-require('dotenv').config()
+import { SPREADSHEET_META_INFO } from './types/common';
 
 /**
- * 設定。
- * .envで以下の値を定義してください。
+ * Please add these values to `.env` file.
  *   PROJECT_ID： JIRAプロジェクトID 例： NLBO
  *   BASE_URL： JIRA REST APIのベースURL 例： https://example.atlassian.net
  *   JIRA_USER_NAME： JIRAのユーザ名（Email) 例： example@gmail.com
  *   API_TOKEN： API_TOKEN。こちらから作成する。 https://id.atlassian.com/manage-profile/security/api-tokens
  */
+import { Buffer } from 'buffer';
+import 'dotenv/config'
 
+export module Settings {
 
-// デバッグ
-const debug = false;
+  // ++++++++++
+  // Sprint ID
+  // ++++++++++
+  export const SPRINT_ID = 4;
 
-// JIRA
-const PROJECT_ID = process.env.PROJECT_ID;
-// リードタイム対象となるIssueType
-// 将来的に複数指定できると便利だけど、そうするとIssueTypeごとにTransition設定できるので
-// IssueTypeごとに集計方法を変えなければならない
-const ISSUE_TYPE = 'ストーリー';
-const BASE_URL = process.env.BASE_URL;
-const SEARCH_URL = BASE_URL + '/rest/api/3/search';
-const CHANGELOG_URL = BASE_URL + '/rest/api/3/issue';
-const TRANSITION_URL = BASE_URL + '/rest/api/3/issue';
+  // Debug log
+  export const DEBUG = false;
 
-// Auth
-const JIRA_USER_NAME = process.env.JIRA_USER_NAME;
-const API_TOKEN = process.env.API_TOKEN;
+  // JIRA
+  export const PROJECT_ID = process.env.PROJECT_ID;
 
-const org = 'user1:password-goes-here!';
-console.log( `original = ${org}`);
+  // リードタイム対象となるIssueType
+  // 将来的に複数指定できると便利だけど、そうするとIssueTypeごとにTransition設定できるので
+  // IssueTypeごとに集計方法を変えなければならない
+  export const ISSUE_TYPE = 'ストーリー';
+  export const BASE_URL = process.env.BASE_URL;
+  export const SEARCH_URL = BASE_URL + '/rest/api/3/search';
+  export const CHANGELOG_URL = BASE_URL + '/rest/api/3/issue';
+  export const TRANSITION_URL = BASE_URL + '/rest/api/3/issue';
 
-const CREDENTIAL = Buffer.from(JIRA_USER_NAME + ":" + API_TOKEN).toString('base64') ;
-const REQUEST_ARGS = {
-  contentType: "application/json",
-  headers: { "Authorization": "Basic " + CREDENTIAL },
-  muteHttpExceptions: true
-};
+  // Auth
+  export const JIRA_USER_NAME = process.env.JIRA_USER_NAME;
+  export const API_TOKEN = process.env.API_TOKEN;
+  export const CREDENTIAL = Buffer.from(JIRA_USER_NAME + ":" + API_TOKEN).toString('base64') ;
+  export const REQUEST_HEADERS = {
+      "Authorization": `Basic ${CREDENTIAL}`,
+      "Accept": "application/json",
+  };
 
-// 集計するスプリントの数（指定したスプリントのIDから過去MAX_SPRINT_NUMだけ遡る）
-const MAX_SPRINT_NUM = 10;
-// 出力するデータ情報。 ['シート名', ['見出し', '見出し'・・・]]
-const exports = [
-  ['data(Status)', ['sprintId', 'key', 'summary', 'from-to', 'leadtime', 'created']],
-  ['data(Issue)', ['sprintId', 'key', 'summary', 'leadtime', 'created']],
-  ['data(Sprint)', ['sprintId', 'leadtime']],
-];
-// リードタイムの計算単位。Unixtime（秒）で計算するため、１時間単位なら６０秒 ｘ ６０分 ＝ ３６００秒を設定
-const LEADTILE_UNIT = 60 * 60;
-// 1時間に満たない場合にまるめる値
-const LEADTILE_MIN = 0.5;
+  // 集計するスプリントの数（指定したスプリントのIDから過去MAX_SPRINT_NUMだけ遡る）
+  export const MAX_SPRINT_NUM = 10;
+
+  // 出力するデータ情報。 ['シート名', ['見出し', '見出し'・・・]]
+  export const SPREADSHEET_META_INFO_ARRAY: Array<SPREADSHEET_META_INFO> = [
+    {
+      "sheetName": "data(Status)",
+      "key": "resultByStatus",
+      "headers":  ["sprintId", "key", "summary", "from-to", "leadtime", "created"],
+    },
+    {
+      "sheetName": "data(Issue)",
+      "key": "resultByIssue",
+      "headers": ["sprintId", "key", "summary", "leadtime", "created"],
+    },
+    {
+      "sheetName": "data(Sprint)",
+      "key": "resultByIssue",
+      "headers": ["sprintId", "leadtime"],
+    },
+  ];
+
+  // リードタイムの計算単位。Unixtime（秒）で計算するため、１時間単位なら６０秒 ｘ ６０分 ＝ ３６００秒を設定
+  export const LEADTILE_UNIT = 60 * 60;
+  // 1時間に満たない場合にまるめる値
+  export const LEADTILE_MIN = 0.5;
+}

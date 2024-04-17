@@ -1,20 +1,17 @@
 {
-  "name": "typescript",
+  "name": "jira-leadtime-dashboard",
   "version": "1.0.0",
+  "description": "GASを使ってJIRAからリードタイム情報を抜き出し、ダッシュボードを作っています。 / I am using GAS to extract lead time information from JIRA and create a dashboard.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "Dai Fujihara@daipresents",
+  "author": "@daipresents",
   "license": "ISC",
-  "description": "Getting JIRA data to create leadtime dashboard by TypeScript",
   "devDependencies": {
     "@types/node": "^20.12.7",
-    "tslint": "^6.1.3",
+    "dotenv": "^16.4.5",
     "typescript": "^5.4.5"
-  },
-  "dependencies": {
-    "dotenv": "^16.4.5"
   }
 }
