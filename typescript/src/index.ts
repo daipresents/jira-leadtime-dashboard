@@ -120,7 +120,7 @@ async function main() {
 
           // 前のステータスに戻っていたら無視して次へ
           if (previousFrom === item.toString) {
-            Logger.info(`Back to previous status. skip. status from ${item.fromString} to ${item.toString}.`);
+            Logger.info(`Back to previous status. skip. key: ${issue.key}, status from ${item.fromString} to ${item.toString}.`);
             continue;
           }
 
