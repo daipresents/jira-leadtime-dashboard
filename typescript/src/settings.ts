@@ -67,4 +67,7 @@ export module Settings {
   export const LEADTILE_UNIT = 60 * 60;
   // 1時間に満たない場合にまるめる値
   export const LEADTILE_MIN = 0.5;
+
+  //
+  export const CSV_DIR = "./csv"
 }

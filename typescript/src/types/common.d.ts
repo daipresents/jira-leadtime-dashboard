@@ -21,6 +21,7 @@ export interface ResultByStatus {
 }
 
 export interface DashboardData {
+  "sprintId": number,
   "resultByStatus": ResultByStatus[],
   "resultByIssue": ResultByIssue[],
   "resultBySprint": ResultBySprint[],

@@ -4,8 +4,7 @@ import { JIRAIssue  } from "./types/jira";
 import {ResultByStatus, ResultByIssue, ResultBySprint, DashboardData } from "./types/common";
 import { formatDateForSpreadsheet, calcLeadtimeHour } from "./leadtime";
 import { getSprintIssues, getChangeLogs } from "./api";
-import { exportData } from "./data";
-import fs from "fs";
+import { exportData, exportHeaders } from "./data";
 
 const sprintId = Settings.SPRINT_ID;
 
@@ -44,17 +43,19 @@ async function main() {
     const metaInfo = Settings.SPREADSHEET_META_INFO_ARRAY[i];
     Logger.debugObject("metaInfo", metaInfo);
 
-    const sheetName: string = metaInfo["sheetName"];
+    const fileName: string = metaInfo["sheetName"];
     const key = metaInfo["key"];
     const headers: Array<string> = metaInfo["headers"];
 
+    const filePath = `${Settings.CSV_DIR}/${fileName}.tsv`;
+    Logger.info(filePath);
+
     // ヘッダの書き出し
-    Logger.debugObject("headers", headers);
+    exportHeaders(filePath, headers);
 
     // データの書き出し
     for(let j = 0; j < dashboardData.length; j++) {
-      const data: DashboardData = dashboardData[j];
-      exportData(sheetName, data[key]);
+      exportData(filePath, dashboardData[j][key]);
     }
   }
 
@@ -187,6 +188,7 @@ async function main() {
     leadTimeDataBySprint.push(resultBySprint);
 
     const dashboardData: DashboardData = {
+      "sprintId": sprintId,
       "resultByStatus": leadTimeDataByStatus,
       "resultByIssue": leadTimeDataByIssues,
       "resultBySprint": leadTimeDataBySprint,
