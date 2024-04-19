@@ -7,13 +7,17 @@ import { getSprintIssues, getChangeLogs } from "./api";
 import { exportData } from "./data";
 import fs from "fs";
 
-// FIXME: Set sprint id here.
 const sprintId = Settings.SPRINT_ID;
 
 Logger.info(`指定されたスプリントのID: ${Settings.SPRINT_ID} から過去${Settings.MAX_SPRINT_NUM}スプリントのデータを集計します`);
 
 main();
 
+/**
+ * メインロジック
+ *   1. 集計
+ *   2. エクスポート
+ */
 async function main() {
   const dashboardData: DashboardData[] = [];
 
@@ -34,7 +38,7 @@ async function main() {
   }
 
   Logger.info("集計完了");
-  Logger.info("export開始");
+  Logger.info("エクスポート開始");
 
   for (let i = 0; i < Settings.SPREADSHEET_META_INFO_ARRAY.length; i++) {
     const metaInfo = Settings.SPREADSHEET_META_INFO_ARRAY[i];
@@ -54,7 +58,7 @@ async function main() {
     }
   }
 
-  Logger.info("export完了");
+  Logger.info("エクスポート完了");
 
 
   /**
