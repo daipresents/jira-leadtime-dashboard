@@ -1,11 +1,11 @@
-import { Settings } from './settings';
-import { Logger } from './logger';
-import { JIRAIssue  } from './types/jira';
-import {ResultByStatus, ResultByIssue, ResultBySprint, DashboardData } from './types/common';
-import { formatDateForSpreadsheet, calcLeadtimeHour } from './leadtime';
-import { getSprintIssues, getChangeLogs } from './api';
-import { exportData } from './data';
-import fs from 'fs';
+import { Settings } from "./settings";
+import { Logger } from "./logger";
+import { JIRAIssue  } from "./types/jira";
+import {ResultByStatus, ResultByIssue, ResultBySprint, DashboardData } from "./types/common";
+import { formatDateForSpreadsheet, calcLeadtimeHour } from "./leadtime";
+import { getSprintIssues, getChangeLogs } from "./api";
+import { exportData } from "./data";
+import fs from "fs";
 
 // FIXME: Set sprint id here.
 const sprintId = Settings.SPRINT_ID;
@@ -34,7 +34,7 @@ async function main() {
   }
 
   Logger.info("集計完了");
-  Logger.info('export開始');
+  Logger.info("export開始");
 
   for (let i = 0; i < Settings.SPREADSHEET_META_INFO_ARRAY.length; i++) {
     const metaInfo = Settings.SPREADSHEET_META_INFO_ARRAY[i];
@@ -54,7 +54,7 @@ async function main() {
     }
   }
 
-  Logger.info('export完了');
+  Logger.info("export完了");
 
 
   /**
@@ -134,48 +134,48 @@ async function main() {
             "from-to": "",
           };
 
-          if (item.fromString === '') {
+          if (item.fromString === "") {
             // fromがない場合はステータスのChangelogではないのでIssueの作成日時を設定して次に進む
             previousCreated = formatDateForSpreadsheet(issue.fields.created);
             continue;
 
-          } else if (item.fieldId === 'status') {
+          } else if (item.fieldId === "status") {
             const created = formatDateForSpreadsheet(changeLog.created);
-            resultByStatus['key'] = issue.key;
-            resultByStatus['summary'] = issue.fields.summary;
-            resultByStatus['created'] = created;
-            resultByStatus['from-to'] = item.fromString + '~' + item.toString;
+            resultByStatus["key"] = issue.key;
+            resultByStatus["summary"] = issue.fields.summary;
+            resultByStatus["created"] = created;
+            resultByStatus["from-to"] = `${item.fromString}-${item.toString}`;
 
             // 前のステータスとのリードタイムを計算
             const leadtime = calcLeadtimeHour(previousCreated, created);
-            resultByStatus['leadtime'] = leadtime;
+            resultByStatus["leadtime"] = leadtime;
 
             previousFrom = item.fromString;
             previousCreated = created;
 
           } else {
-            Logger.debug('skip this changelog. item.fieldId:' + item.fieldId);
+            Logger.debug(`[SKIP] this changelog. item.fieldId: ${item.fieldId}`);
             continue;
           }
 
           Logger.debugObject("resultbyStatus", resultByStatus);
           leadTimeDataByStatus.push(resultByStatus);
 
-          resultByIssue['leadtime'] += resultByStatus['leadtime'];
+          resultByIssue["leadtime"] += resultByStatus["leadtime"];
         }
       }
 
       // データ作成（Issueごと）
-      resultByIssue['sprintId'] = sprintId;
-      resultByIssue['key'] = issue.key;
-      resultByIssue['summary'] = issue.fields.summary;
-      resultByIssue['created'] = formatDateForSpreadsheet(issue.fields.created);
+      resultByIssue["sprintId"] = sprintId;
+      resultByIssue["key"] = issue.key;
+      resultByIssue["summary"] = issue.fields.summary;
+      resultByIssue["created"] = formatDateForSpreadsheet(issue.fields.created);
 
       Logger.debugObject("resultByIssue", resultByIssue);
       leadTimeDataByIssues.push(resultByIssue);
 
-      resultBySprint['sprintId'] = sprintId;
-      resultBySprint['leadtime'] += resultByIssue['leadtime'];
+      resultBySprint["sprintId"] = sprintId;
+      resultBySprint["leadtime"] += resultByIssue["leadtime"];
     }
 
     // データ作成（スプリントごと）

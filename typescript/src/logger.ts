@@ -1,4 +1,4 @@
-import { Settings } from './settings';
+import { Settings } from "./settings";
 
 export module Logger {
   export function debug(message: string) {

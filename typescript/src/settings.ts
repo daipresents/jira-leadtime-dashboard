@@ -1,4 +1,4 @@
-import { SPREADSHEET_META_INFO } from './types/common';
+import { SPREADSHEET_META_INFO } from "./types/common";
 
 /**
  * Please add these values to `.env` file.
@@ -7,8 +7,8 @@ import { SPREADSHEET_META_INFO } from './types/common';
  *   JIRA_USER_NAME： JIRAのユーザ名（Email) 例： example@gmail.com
  *   API_TOKEN： API_TOKEN。こちらから作成する。 https://id.atlassian.com/manage-profile/security/api-tokens
  */
-import { Buffer } from 'buffer';
-import 'dotenv/config'
+import { Buffer } from "buffer";
+import "dotenv/config"
 
 export module Settings {
 
@@ -26,16 +26,16 @@ export module Settings {
   // リードタイム対象となるIssueType
   // 将来的に複数指定できると便利だけど、そうするとIssueTypeごとにTransition設定できるので
   // IssueTypeごとに集計方法を変えなければならない
-  export const ISSUE_TYPE = 'ストーリー';
+  export const ISSUE_TYPE = "ストーリー";
   export const BASE_URL = process.env.BASE_URL;
-  export const SEARCH_URL = BASE_URL + '/rest/api/3/search';
-  export const CHANGELOG_URL = BASE_URL + '/rest/api/3/issue';
-  export const TRANSITION_URL = BASE_URL + '/rest/api/3/issue';
+  export const SEARCH_URL = BASE_URL + "/rest/api/3/search";
+  export const CHANGELOG_URL = BASE_URL + "/rest/api/3/issue";
+  export const TRANSITION_URL = BASE_URL + "/rest/api/3/issue";
 
   // Auth
   export const JIRA_USER_NAME = process.env.JIRA_USER_NAME;
   export const API_TOKEN = process.env.API_TOKEN;
-  export const CREDENTIAL = Buffer.from(JIRA_USER_NAME + ":" + API_TOKEN).toString('base64') ;
+  export const CREDENTIAL = Buffer.from(JIRA_USER_NAME + ":" + API_TOKEN).toString("base64") ;
   export const REQUEST_HEADERS = {
       "Authorization": `Basic ${CREDENTIAL}`,
       "Accept": "application/json",
@@ -44,7 +44,7 @@ export module Settings {
   // 集計するスプリントの数（指定したスプリントのIDから過去MAX_SPRINT_NUMだけ遡る）
   export const MAX_SPRINT_NUM = 10;
 
-  // 出力するデータ情報。 ['シート名', ['見出し', '見出し'・・・]]
+  // 出力するデータ情報。 ["シート名", ["見出し", "見出し"・・・]]
   export const SPREADSHEET_META_INFO_ARRAY: Array<SPREADSHEET_META_INFO> = [
     {
       "sheetName": "data(Status)",

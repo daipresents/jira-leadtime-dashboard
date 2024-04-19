@@ -9,11 +9,11 @@ import { ResultByStatus, ResultByIssue, ResultBySprint } from "./types/common";
 //   let sheet = spreadsheet.getSheetByName(sheetName);
 
 //   if (sheet) {
-//     debugLog('Clear export sheet.');
+//     debugLog("Clear export sheet.");
 //     sheet.clear();
 //     return sheet;
 //   } else {
-//     debugLog('Create export sheet.');
+//     debugLog("Create export sheet.");
 //     return spreadsheet.insertSheet().setName(sheetName);
 //   }
 // }
@@ -28,7 +28,7 @@ export function exportData(sheetName: string, data: ResultByStatus[] | ResultByI
     //console.log(row);
   }
 
-  Logger.debug('[exportData] end.');
+  Logger.debug("[exportData] end.");
 
 }
 

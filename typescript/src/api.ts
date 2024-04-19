@@ -1,6 +1,6 @@
-import { Logger } from './logger';
-import { Settings } from './settings';
-import { JIRAIssueResponse, JIRAIssueErrorResponse, JIRAIssue, JIRAChangelogResponse, JIRAChangelog } from './types/jira';
+import { Logger } from "./logger";
+import { Settings } from "./settings";
+import { JIRAIssueResponse, JIRAIssueErrorResponse, JIRAIssue, JIRAChangelogResponse, JIRAChangelog } from "./types/jira";
 
 /**
  * JQLを使ってIssueを取得
@@ -41,7 +41,7 @@ async function request(url: string): Promise<JIRAIssueResponse | JIRAChangelogRe
 
   const response =
     await fetch(url, {
-      method: 'GET',
+      method: "GET",
       headers: Settings.REQUEST_HEADERS,
     });
 
