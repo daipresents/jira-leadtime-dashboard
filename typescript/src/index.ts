@@ -90,7 +90,7 @@ async function main() {
     for (let issue of issues) {
       // 対象のIssueTypeかを判定
       if (issue.fields.issuetype.name !== Settings.ISSUE_TYPE) {
-        Logger.debug(`issueType: ${issue.fields.issuetype.name} so skip it.`);
+        Logger.debug(`[SKIP] issueType: ${issue.fields.issuetype.name} so skip it.`);
         continue;
       }
 
@@ -120,7 +120,7 @@ async function main() {
 
           // 前のステータスに戻っていたら無視して次へ
           if (previousFrom === item.toString) {
-            Logger.info(`Back to previous status. skip. key: ${issue.key}, status from ${item.fromString} to ${item.toString}.`);
+            Logger.info(`[SKIP] This ticket has its status changed to the previous status. key: ${issue.key}, status from ${item.fromString} to ${item.toString}.`);
             continue;
           }
 
