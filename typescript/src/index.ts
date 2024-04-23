@@ -4,7 +4,7 @@ import { JIRAIssue  } from "./types/jira";
 import {ResultByStatus, ResultByIssue, ResultBySprint, DashboardData } from "./types/common";
 import { formatDateForSpreadsheet, calcLeadtimeHour } from "./leadtime";
 import { getSprintIssues, getChangeLogs } from "./api";
-import { exportData, exportHeaders } from "./data";
+import { prepareDirectory, exportData, exportHeaders } from "./data";
 
 const sprintId = Settings.SPRINT_ID;
 
@@ -47,8 +47,11 @@ async function main() {
     const key = metaInfo["key"];
     const headers: Array<string> = metaInfo["headers"];
 
-    const filePath = `${Settings.CSV_DIR}/${fileName}.tsv`;
+    const filePath = `${Settings.OUTPUT_DIR}/${fileName}.tsv`;
     Logger.debug(filePath);
+
+    // ディレクトリ作成
+    prepareDirectory();
 
     // ヘッダの書き出し
     exportHeaders(filePath, headers);
