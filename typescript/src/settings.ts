@@ -41,7 +41,7 @@ export namespace Settings {
       "Accept": "application/json",
   };
 
-  // 集計するスプリントの数（指定したスプリントのIDから過去MAX_SPRINT_NUMだけ遡る）
+  // The script will tally the sprints going back from this value by MAX_SPRINT_NUM (default is 10).
   export const MAX_SPRINT_NUM = 10;
 
   // 出力するデータ情報。 ["シート名", ["見出し", "見出し"・・・]]

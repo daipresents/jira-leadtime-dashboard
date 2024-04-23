@@ -42,6 +42,13 @@ JIRA_USER_NAME="${YOUR_EMAIL}@gmail.com"
 API_TOKEN="${YOUR_KEY}"
 ```
 
+Please change `sprintId` on `src/settings.ts`.
+The script will tally the sprints going back from this value by MAX_SPRINT_NUM (default is 10).
+
+```
+export const SPRINT_ID = 4;
+```
+
 And run `index.ts`.
 
 ```
