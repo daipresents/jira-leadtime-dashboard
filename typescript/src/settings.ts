@@ -69,5 +69,5 @@ export namespace Settings {
   export const LEADTILE_MIN = 0.5;
 
   //
-  export const CSV_DIR = "./csv"
+  export const CSV_DIR = "./tsv"
 }
