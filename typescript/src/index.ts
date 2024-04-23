@@ -48,7 +48,7 @@ async function main() {
     const headers: Array<string> = metaInfo["headers"];
 
     const filePath = `${Settings.CSV_DIR}/${fileName}.tsv`;
-    Logger.info(filePath);
+    Logger.debug(filePath);
 
     // ヘッダの書き出し
     exportHeaders(filePath, headers);
@@ -86,8 +86,8 @@ async function main() {
     const leadTimeDataBySprint: Array<ResultBySprint> = [];
 
     const resultBySprint = {
-      "sprintId": 0,
-      "leadtime": 0,
+      sprintId: 0,
+      leadtime: 0,
     };
 
     // スプリントごとのIssueを取得
@@ -103,11 +103,11 @@ async function main() {
 
       // データ作成開始（Issueごと）
       const resultByIssue: ResultByIssue = {
-        "leadtime": 0,
-        "sprintId": sprintId,
-        "key": "",
-        "summary": "",
-        "created": "",
+        leadtime: 0,
+        sprintId: sprintId,
+        key: "",
+        summary: "",
+        created: "",
       };
 
       // ステータスが戻っていないか判定用
@@ -131,12 +131,12 @@ async function main() {
 
           // データ作成（ステータスごと）
           const resultByStatus: ResultByStatus = {
-            "leadtime": 0,
-            "sprintId": sprintId,
-            "key": "",
-            "summary": "",
-            "created": "",
-            "from-to": "",
+            leadtime: 0,
+            sprintId: sprintId,
+            key: "",
+            summary: "",
+            created: "",
+            fromTo: "",
           };
 
           if (item.fromString === "") {
@@ -146,14 +146,14 @@ async function main() {
 
           } else if (item.fieldId === "status") {
             const created = formatDateForSpreadsheet(changeLog.created);
-            resultByStatus["key"] = issue.key;
-            resultByStatus["summary"] = issue.fields.summary;
-            resultByStatus["created"] = created;
-            resultByStatus["from-to"] = `${item.fromString}-${item.toString}`;
+            resultByStatus.key = issue.key;
+            resultByStatus.summary = issue.fields.summary;
+            resultByStatus.created = created;
+            resultByStatus.fromTo = `from ${item.fromString} to ${item.toString}`;
 
             // 前のステータスとのリードタイムを計算
             const leadtime = calcLeadtimeHour(previousCreated, created);
-            resultByStatus["leadtime"] = leadtime;
+            resultByStatus.leadtime = leadtime;
 
             previousFrom = item.fromString;
             previousCreated = created;
@@ -166,21 +166,21 @@ async function main() {
           Logger.debugObject("resultbyStatus", resultByStatus);
           leadTimeDataByStatus.push(resultByStatus);
 
-          resultByIssue["leadtime"] += resultByStatus["leadtime"];
+          resultByIssue.leadtime += resultByStatus.leadtime;
         }
       }
 
       // データ作成（Issueごと）
-      resultByIssue["sprintId"] = sprintId;
-      resultByIssue["key"] = issue.key;
-      resultByIssue["summary"] = issue.fields.summary;
-      resultByIssue["created"] = formatDateForSpreadsheet(issue.fields.created);
+      resultByIssue.sprintId = sprintId;
+      resultByIssue.key = issue.key;
+      resultByIssue.summary = issue.fields.summary;
+      resultByIssue.created = formatDateForSpreadsheet(issue.fields.created);
 
       Logger.debugObject("resultByIssue", resultByIssue);
       leadTimeDataByIssues.push(resultByIssue);
 
-      resultBySprint["sprintId"] = sprintId;
-      resultBySprint["leadtime"] += resultByIssue["leadtime"];
+      resultBySprint.sprintId = sprintId;
+      resultBySprint.leadtime += resultByIssue.leadtime;
     }
 
     // データ作成（スプリントごと）

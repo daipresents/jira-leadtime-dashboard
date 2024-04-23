@@ -10,7 +10,7 @@ import { SPREADSHEET_META_INFO } from "./types/common";
 import { Buffer } from "buffer";
 import "dotenv/config"
 
-export module Settings {
+export namespace Settings {
 
   // ++++++++++
   // Sprint ID
@@ -49,7 +49,7 @@ export module Settings {
     {
       "sheetName": "data(Status)",
       "key": "resultByStatus",
-      "headers":  ["sprintId", "key", "summary", "from-to", "leadtime", "created"],
+      "headers":  ["sprintId", "key", "summary", "fromTo", "leadtime", "created"],
     },
     {
       "sheetName": "data(Issue)",
@@ -58,7 +58,7 @@ export module Settings {
     },
     {
       "sheetName": "data(Sprint)",
-      "key": "resultByIssue",
+      "key": "resultBySprint",
       "headers": ["sprintId", "leadtime"],
     },
   ];

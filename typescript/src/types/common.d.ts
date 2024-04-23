@@ -1,34 +1,34 @@
 export interface ResultBySprint {
-  "sprintId": number,
-  "leadtime": number,
+  sprintId: number,
+  leadtime: number,
 };
 
 export interface ResultByIssue {
-  "leadtime": number,
-  "sprintId": number,
-  "key": string,
-  "summary": string,
-  "created": string,
+  leadtime: number,
+  sprintId: number,
+  key: string,
+  summary: string,
+  created: string,
 }
 
-export interface ResultByStatus {
-  "leadtime": number,
-  "sprintId": number,
-  "key": string,
-  "summary": string,
-  "created": string,
-  "from-to": string,
+export type ResultByStatus = {
+  leadtime: number,
+  sprintId: number,
+  key: string,
+  summary: string,
+  created: string,
+  fromTo: string,
 }
 
-export interface DashboardData {
-  "sprintId": number,
-  "resultByStatus": ResultByStatus[],
-  "resultByIssue": ResultByIssue[],
-  "resultBySprint": ResultBySprint[],
+export type DashboardData= {
+  sprintId: number,
+  resultByStatus: ResultByStatus[],
+  resultByIssue: ResultByIssue[],
+  resultBySprint: ResultBySprint[],
 }
 
-export interface SPREADSHEET_META_INFO {
-  "sheetName": string,
-  "key": "resultByStatus" | "resultByIssue" | "resultBySprint",
-  "headers": Array<string>,
+export type SPREADSHEET_META_INFO = {
+  sheetName: string,
+  key: "resultByStatus" | "resultByIssue" | "resultBySprint",
+  headers: Array<string>,
 }

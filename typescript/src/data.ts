@@ -1,6 +1,5 @@
 import { Logger } from "./logger";
 import { ResultByStatus, ResultByIssue, ResultBySprint } from "./types/common";
-import { Settings } from "./settings";
 import fs from "fs";
 
 /**
@@ -9,52 +8,55 @@ import fs from "fs";
  * @param headers
  */
 export function exportHeaders(filePath: string, headers: Array<string>) {
-  Logger.info("[exportHeaders] start.");
+  Logger.debug("[exportHeaders] start.");
   Logger.debugObject("headers", headers);
 
   let headerRow = "";
   for(let header of headers) {
-    headerRow += header;
-    headerRow += "\t";
+    headerRow += `${header}\t`;
   }
 
   try {
-    fs.writeFileSync(filePath, `${headerRow}`);
+    fs.writeFileSync(filePath, `${headerRow}\n`);
   } catch (e) {
     console.log(e);
   }
 
-  Logger.info("[exportHeaders] end.");
+  Logger.debug("[exportHeaders] end.");
 }
 
 /**
  * スプレッドシートへのデータ出力
  */
 export function exportData(filePath: string, dataArray: ResultByStatus[] | ResultByIssue[] | ResultBySprint[]) {
-  Logger.info("[exportData] start");
+  Logger.debug("[exportData] start");
   Logger.debugObject("dataArray", dataArray);
 
   for(let rowData of dataArray) {
     const rowString = convertFromObjectToCSV(rowData);
+    Logger.debug(rowString);
 
     try {
-      //fs.appendFileSync(filePath, rowString);
+      fs.appendFileSync(filePath, `${rowString}\n`);
 
     } catch (e) {
       console.log(e);
     }
   }
 
-  Logger.info("[exportData] end.");
+  Logger.debug("[exportData] end.");
 
 }
 
 function convertFromObjectToCSV (rowData: ResultByStatus | ResultByIssue | ResultBySprint): string {
-  let rowString = "";
-  for (const property in rowData) {
-    //rowString += rowData[property];
-    //rowString += '\t';
+  if ("fromTo" in rowData) {
+    // ResultByStatus
+    return `${rowData.sprintId}\t${rowData.key}\t${rowData.summary}\t${rowData.fromTo}\t${rowData.leadtime}\t${rowData.created}`;
+  } else if ("created" in rowData) {
+    // ResultByIssue
+    return `${rowData.sprintId}\t${rowData.key}\t${rowData.summary}\t${rowData.leadtime}\t${rowData.created}`;
+  } else {
+    // ResultBySprint
+    return `${rowData.sprintId}\t${rowData.leadtime}`;
   }
-
-  return "";
 }
