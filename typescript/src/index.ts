@@ -145,7 +145,8 @@ async function main() {
       // ステータスが戻っていないか判定用
       let previousFrom = null;
       // 前のステータスからのリードタイム計算用
-      let previousCreated: string = "";
+      // TODOからいきなりDONEにした場合のように、itemが一つしかない場合に備えてIssueの作成日をデフォルトで入れておく
+      let previousCreated: string = issue.fields.created;
 
       for(let changeLog of changeLogs){
         Logger.debugObject("changelog", changeLog);
@@ -157,7 +158,7 @@ async function main() {
 
           // 前のステータスに戻っていたら無視して次へ
           if (previousFrom === item.toString) {
-            Logger.warn(`[SKIP] This ticket has its status changed to the previous status. key: ${issue.key}, status from ${item.fromString} to ${item.toString}.`);
+            Logger.debug(`[SKIP] This ticket has its status changed to the previous status. key: ${issue.key}, status from ${item.fromString} to ${item.toString}.`);
             continue;
           }
 
@@ -175,8 +176,9 @@ async function main() {
             // fromがない場合はステータスのChangelogではないのでIssueの作成日時を設定して次に進む
             previousCreated = formatDateForSpreadsheet(issue.fields.created);
             continue;
+          }
 
-          } else if (item.fieldId === "status") {
+          if (item.fieldId === "status") {
             const created = formatDateForSpreadsheet(changeLog.created);
             resultByStatus.key = issue.key;
             resultByStatus.summary = issue.fields.summary;
