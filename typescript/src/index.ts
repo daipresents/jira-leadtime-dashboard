@@ -97,7 +97,7 @@ async function main() {
     const issues: JIRAIssue[] = await getSprintIssues(sprintId);
     if (!issues) {
       const message = `sprintId: ${sprintId} is no issue: ${issues}`;
-      Logger.info(message);
+      Logger.debug(message);
       throw new Error(message);
     }
 
@@ -116,6 +116,11 @@ async function main() {
       }
 
       const changeLogs = await getChangeLogs(issue.key);
+      if (!changeLogs) {
+        const message = `sprintId: ${sprintId}, key: ${issue.key} is no changeLog: ${changeLogs}`;
+        Logger.debug(message);
+        continue;
+      }
 
       // データ作成開始（Issueごと）
       const resultByIssue: ResultByIssue = {
