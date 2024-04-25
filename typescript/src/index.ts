@@ -200,12 +200,12 @@ async function main() {
 
           resultByIssue.leadtime += resultByStatus.leadtime;
         }
+      }
 
-        if (!leadTimeDataByStatus.length) {
-          const message = `[SKIP] Array of Leadtime by status is zero.`;
-          Logger.warn(message);
-          return null;
-        }
+      if (!leadTimeDataByStatus.length) {
+        const message = `[SKIP] Array of Leadtime by status is zero.`;
+        Logger.warn(message);
+        return null;
       }
 
       // データ作成（Issueごと）
