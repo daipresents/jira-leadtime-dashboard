@@ -103,9 +103,9 @@ async function main() {
 
     for (let issue of issues) {
 
-      // 対象のプロジェクトかを判定
+      // 対象のプロジェクトではなかったら次のスプリントへ
       if (!issue.key.includes(Settings.PROJECT_ID as string)) {
-        const message = `[SKIP] key: ${issue.key} so skip it.`;
+        const message = `[SKIP] target: ${Settings.PROJECT_ID} but the key is ${issue.key} so skip it.`;
         Logger.debug(message);
         throw new Error(message);
       }
@@ -190,6 +190,12 @@ async function main() {
 
           resultByIssue.leadtime += resultByStatus.leadtime;
         }
+
+        if (!leadTimeDataByStatus.length) {
+          const message = `[SKIP] Array of Leadtime by status is zero.`;
+          Logger.debug(message);
+          throw new Error(message);
+        }
       }
 
       // データ作成（Issueごと）
@@ -203,12 +209,6 @@ async function main() {
 
       resultBySprint.sprintId = sprintId;
       resultBySprint.leadtime += resultByIssue.leadtime;
-    }
-
-    if (!leadTimeDataByStatus.length) {
-      const message = `[SKIP] Leadtime by status is zero.`;
-      Logger.debug(message);
-      throw new Error(message);
     }
 
     // データ作成（スプリントごと）
