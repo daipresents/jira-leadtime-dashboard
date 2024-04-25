@@ -96,6 +96,13 @@ async function main() {
     // スプリントごとのIssueを取得
     const issues: JIRAIssue[] = await getSprintIssues(sprintId);
     for (let issue of issues) {
+
+      // 対象のプロジェクトかを判定
+      if (!issue.key.includes(Settings.PROJECT_ID as string)) {
+        Logger.debug(`[SKIP] key: ${issue.key} so skip it.`);
+        continue;
+      }
+
       // 対象のIssueTypeかを判定
       if (issue.fields.issuetype.name !== Settings.ISSUE_TYPE) {
         Logger.debug(`[SKIP] issueType: ${issue.fields.issuetype.name} so skip it.`);
