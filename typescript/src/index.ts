@@ -223,7 +223,9 @@ async function main() {
 
     // データ作成（スプリントごと）
     Logger.debugObject("resultBySprint", resultBySprint);
-    leadTimeDataBySprint.push(resultBySprint);
+    if (!resultBySprint.sprintId) {
+      leadTimeDataBySprint.push(resultBySprint);
+    }
 
     const dashboardData: DashboardData = {
       "sprintId": sprintId,
