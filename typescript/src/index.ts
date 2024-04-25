@@ -105,8 +105,9 @@ async function main() {
 
       // 対象のプロジェクトかを判定
       if (!issue.key.includes(Settings.PROJECT_ID as string)) {
-        Logger.debug(`[SKIP] key: ${issue.key} so skip it.`);
-        continue;
+        const message = `[SKIP] key: ${issue.key} so skip it.`;
+        Logger.debug(message);
+        throw new Error(message);
       }
 
       // 対象のIssueTypeかを判定
