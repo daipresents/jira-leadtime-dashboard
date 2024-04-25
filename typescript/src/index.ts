@@ -95,6 +95,12 @@ async function main() {
 
     // スプリントごとのIssueを取得
     const issues: JIRAIssue[] = await getSprintIssues(sprintId);
+    if (!issues) {
+      const message = `sprintId: ${sprintId} is no issue: ${issues}`;
+      Logger.info(message);
+      throw new Error(message);
+    }
+
     for (let issue of issues) {
 
       // 対象のプロジェクトかを判定
