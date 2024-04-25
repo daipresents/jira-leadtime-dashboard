@@ -129,7 +129,7 @@ async function main() {
       const changeLogs = await getChangeLogs(issue.key);
       if (!changeLogs) {
         const message = `sprintId: ${sprintId}, key: ${issue.key} is no changeLog: ${changeLogs}`;
-        Logger.warn(message);
+        Logger.debug(message);
         continue;
       }
 
