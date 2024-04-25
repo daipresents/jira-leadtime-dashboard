@@ -221,11 +221,15 @@ async function main() {
       resultBySprint.leadtime += resultByIssue.leadtime;
     }
 
+    if (!resultBySprint.sprintId) {
+      const message = `[SKIP] sprintId is ${resultBySprint.sprintId}`;
+      Logger.warn(message);
+      return null;
+    }
+
     // データ作成（スプリントごと）
     Logger.debugObject("resultBySprint", resultBySprint);
-    if (!resultBySprint.sprintId) {
-      leadTimeDataBySprint.push(resultBySprint);
-    }
+    leadTimeDataBySprint.push(resultBySprint);
 
     const dashboardData: DashboardData = {
       "sprintId": sprintId,
