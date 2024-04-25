@@ -192,6 +192,11 @@ async function main() {
         }
       }
 
+      if (!leadTimeDataByStatus) {
+        const message = `[SKIP] key: ${issue.key}. Leadtime by status is zero.`;
+        Logger.debug(message);
+        throw new Error(message);
+      }
       // データ作成（Issueごと）
       resultByIssue.sprintId = sprintId;
       resultByIssue.key = issue.key;
