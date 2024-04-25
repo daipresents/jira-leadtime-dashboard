@@ -171,7 +171,7 @@ async function main() {
             fromTo: "",
           };
 
-          if (item.fromString === "") {
+          if (!item.fromString) {
             // fromがない場合はステータスのChangelogではないのでIssueの作成日時を設定して次に進む
             previousCreated = formatDateForSpreadsheet(issue.fields.created);
             continue;
