@@ -107,7 +107,7 @@ async function main() {
     const issues: JIRAIssue[] = await getSprintIssues(sprintId);
     if (!issues) {
       const message = `sprintId: ${sprintId} is no issue: ${issues}`;
-      Logger.warn(message);
+      Logger.debug(message);
       return null;
     }
 
@@ -191,7 +191,7 @@ async function main() {
             previousCreated = created;
 
           } else {
-            Logger.warn(`[SKIP] this changelog. item.fieldId: ${item.fieldId}`);
+            Logger.debug(`[SKIP] this changelog. item.fieldId: ${item.fieldId}`);
             continue;
           }
 
