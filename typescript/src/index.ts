@@ -5,12 +5,10 @@ import {ResultByStatus, ResultByIssue, ResultBySprint, DashboardData } from "./t
 import { formatDateForSpreadsheet, calcLeadtimeHour } from "./leadtime";
 import { getSprintIssues, getChangeLogs } from "./api";
 import { prepareDirectory, exportData, exportHeaders } from "./data";
-
-const sprintId = Settings.SPRINT_ID;
-
-Logger.info(`指定されたスプリントのID: ${Settings.SPRINT_ID} から過去${Settings.MAX_SPRINT_NUM}スプリントのデータを集計します`);
+import { BadRequestError } from "./errors/bad-request-error";
 
 main();
+
 
 /**
  * メインロジック
@@ -18,6 +16,11 @@ main();
  *   2. エクスポート
  */
 async function main() {
+
+  const sprintId = Settings.SPRINT_ID;
+
+  Logger.info(`指定されたスプリントのID: ${Settings.SPRINT_ID} から過去${Settings.MAX_SPRINT_NUM}スプリントのデータを集計します`);
+
   const dashboardData: DashboardData[] = [];
 
   let startSprint = sprintId - Settings.MAX_SPRINT_NUM;
@@ -28,11 +31,18 @@ async function main() {
   Logger.info("集計開始");
 
   for(let i = startSprint; i <= sprintId; i++) {
+    Logger.info(`sprintId: ${i}`);
     try {
       const data = await createDashboardData(i);
-      dashboardData.push(data);
-    } catch (e: any) {
-      Logger.error(e.message);
+      if (data) {
+        dashboardData.push(data);
+      }
+    } catch (error: any) {
+      if (error instanceof BadRequestError) {
+        Logger.warn(error.message);
+      } else {
+        Logger.error(error.message);
+      }
     }
   }
 
@@ -81,7 +91,7 @@ async function main() {
    *     ステージ1からステージ2のリードタイム： 2時間（02:00 - 00:00 = 2)
    *     ステージ2からDONEのリードタイム： 1時間（03:00 - 02:00 = 1)
    */
-  async function createDashboardData(sprintId: number): Promise<DashboardData>{
+  async function createDashboardData(sprintId: number): Promise<DashboardData | null>{
 
     // 加工するデータをここに集約していく
     const leadTimeDataByStatus: Array<ResultByStatus> = [];
@@ -97,8 +107,8 @@ async function main() {
     const issues: JIRAIssue[] = await getSprintIssues(sprintId);
     if (!issues) {
       const message = `sprintId: ${sprintId} is no issue: ${issues}`;
-      Logger.debug(message);
-      throw new Error(message);
+      Logger.warn(message);
+      return null;
     }
 
     for (let issue of issues) {
@@ -106,8 +116,8 @@ async function main() {
       // 対象のプロジェクトではなかったら次のスプリントへ
       if (!issue.key.includes(Settings.PROJECT_ID as string)) {
         const message = `[SKIP] target: ${Settings.PROJECT_ID} but the key is ${issue.key} so skip it.`;
-        Logger.debug(message);
-        throw new Error(message);
+        Logger.warn(message);
+        return null;
       }
 
       // 対象のIssueTypeかを判定
@@ -119,7 +129,7 @@ async function main() {
       const changeLogs = await getChangeLogs(issue.key);
       if (!changeLogs) {
         const message = `sprintId: ${sprintId}, key: ${issue.key} is no changeLog: ${changeLogs}`;
-        Logger.debug(message);
+        Logger.warn(message);
         continue;
       }
 
@@ -147,7 +157,7 @@ async function main() {
 
           // 前のステータスに戻っていたら無視して次へ
           if (previousFrom === item.toString) {
-            Logger.info(`[SKIP] This ticket has its status changed to the previous status. key: ${issue.key}, status from ${item.fromString} to ${item.toString}.`);
+            Logger.warn(`[SKIP] This ticket has its status changed to the previous status. key: ${issue.key}, status from ${item.fromString} to ${item.toString}.`);
             continue;
           }
 
@@ -181,7 +191,7 @@ async function main() {
             previousCreated = created;
 
           } else {
-            Logger.debug(`[SKIP] this changelog. item.fieldId: ${item.fieldId}`);
+            Logger.warn(`[SKIP] this changelog. item.fieldId: ${item.fieldId}`);
             continue;
           }
 
@@ -193,8 +203,8 @@ async function main() {
 
         if (!leadTimeDataByStatus.length) {
           const message = `[SKIP] Array of Leadtime by status is zero.`;
-          Logger.debug(message);
-          throw new Error(message);
+          Logger.warn(message);
+          return null;
         }
       }
 

@@ -16,9 +16,11 @@ export namespace Settings {
   // Sprint ID
   // ++++++++++
   export const SPRINT_ID = 4;
+  // The script will tally the sprints going back from this value by MAX_SPRINT_NUM (default is 10).
+  export const MAX_SPRINT_NUM = 10;
 
-  // Debug log
-  export const DEBUG = false;
+  // Log level: "DEBUG", "INFO", "WARN", "ERROR"
+  export const LOG_LEVEL = "INFO";
 
   // JIRA
   export const PROJECT_ID = process.env.PROJECT_ID;
@@ -40,9 +42,6 @@ export namespace Settings {
       "Authorization": `Basic ${CREDENTIAL}`,
       "Accept": "application/json",
   };
-
-  // The script will tally the sprints going back from this value by MAX_SPRINT_NUM (default is 10).
-  export const MAX_SPRINT_NUM = 10;
 
   // 出力するデータ情報。 ["シート名", ["見出し", "見出し"・・・]]
   export const SPREADSHEET_META_INFO_ARRAY: Array<SPREADSHEET_META_INFO> = [

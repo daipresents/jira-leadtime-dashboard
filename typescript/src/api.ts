@@ -1,6 +1,7 @@
 import { Logger } from "./logger";
 import { Settings } from "./settings";
 import { JIRAIssueResponse, JIRAIssueErrorResponse, JIRAIssue, JIRAChangelogResponse, JIRAChangelog } from "./types/jira";
+import { BadRequestError } from "./errors/bad-request-error";
 
 /**
  * JQLを使ってIssueを取得
@@ -56,8 +57,7 @@ async function request(url: string): Promise<JIRAIssueResponse | JIRAChangelogRe
   } else if (response.status === 400) {
     const json = await response.json() as JIRAIssueErrorResponse;
     Logger.debugObject("json", json);
-
-    throw new Error(`${responseMessage} ${json.errorMessages[0]}`);
+    throw new BadRequestError(`${responseMessage}, ${json.errorMessages[0]}`);
 
   } else {
     throw new Error(responseMessage);
