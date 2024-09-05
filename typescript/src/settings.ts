@@ -8,7 +8,7 @@ import { SPREADSHEET_META_INFO } from "./types/common";
  *   API_TOKEN： API_TOKEN。こちらから作成する。 https://id.atlassian.com/manage-profile/security/api-tokens
  */
 import { Buffer } from "buffer";
-import "dotenv/config"
+import "dotenv/config";
 
 export namespace Settings {
 
@@ -16,8 +16,8 @@ export namespace Settings {
   // Sprint ID
   // ++++++++++
   export const SPRINT_ID = 4;
-  // The script will tally the sprints going back from this value by MAX_SPRINT_NUM (default is 10).
-  export const MAX_SPRINT_NUM = 10;
+  // The script will tally the sprints going back from this value by MAX_SPRINT_NUM (default is 200).
+  export const MAX_SPRINT_NUM = 200;
 
   // Log level: "DEBUG", "INFO", "WARN", "ERROR"
   export const LOG_LEVEL = "INFO";
@@ -28,7 +28,8 @@ export namespace Settings {
   // リードタイム対象となるIssueType
   // 将来的に複数指定できると便利だけど、そうするとIssueTypeごとにTransition設定できるので
   // IssueTypeごとに集計方法を変えなければならない
-  export const ISSUE_TYPE = "ストーリー";
+  //export const ISSUE_TYPE = "ストーリー";
+  export const ISSUE_TYPES: string[] = ['ストーリー', 'タスク'];
   export const BASE_URL = process.env.BASE_URL;
   export const SEARCH_URL = BASE_URL + "/rest/api/3/search";
   export const CHANGELOG_URL = BASE_URL + "/rest/api/3/issue";

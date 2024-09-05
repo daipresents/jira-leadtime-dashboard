@@ -1,11 +1,11 @@
-import { Settings } from "./settings";
-import { Logger } from "./logger";
-import { JIRAIssue  } from "./types/jira";
-import {ResultByStatus, ResultByIssue, ResultBySprint, DashboardData } from "./types/common";
-import { formatDateForSpreadsheet, calcLeadtimeHour } from "./leadtime";
-import { getSprintIssues, getChangeLogs } from "./api";
-import { prepareDirectory, exportData, exportHeaders } from "./data";
+import { getChangeLogs, getSprintIssues } from "./api";
+import { exportData, exportHeaders, prepareDirectory } from "./data";
 import { BadRequestError } from "./errors/bad-request-error";
+import { calcLeadtimeHour, formatDateForSpreadsheet } from "./leadtime";
+import { Logger } from "./logger";
+import { Settings } from "./settings";
+import { DashboardData, ResultByIssue, ResultBySprint, ResultByStatus } from "./types/common";
+import { JIRAIssue } from "./types/jira";
 
 main();
 
@@ -121,9 +121,15 @@ async function main() {
       }
 
       // 対象のIssueTypeかを判定
-      if (issue.fields.issuetype.name !== Settings.ISSUE_TYPE) {
+      // if (issue.fields.issuetype.name !== Settings.ISSUE_TYPE) {
+      //   Logger.debug(`[SKIP] issueType: ${issue.fields.issuetype.name} so skip it.`);
+      //   continue;
+      // }
+      const containsKeyword: boolean = Settings.ISSUE_TYPES.some(keyword => issue.fields.issuetype.name.includes(keyword));
+
+      if (!containsKeyword) {
         Logger.debug(`[SKIP] issueType: ${issue.fields.issuetype.name} so skip it.`);
-        continue;
+          continue;
       }
 
       const changeLogs = await getChangeLogs(issue.key);
